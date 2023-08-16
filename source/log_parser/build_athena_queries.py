@@ -102,6 +102,8 @@ def build_athena_query_for_waf_logs(
     request_threshold_by_country,
     group_by,
     athena_query_run_schedule,
+    exclude_uri_prefix,
+    exclude_uri_suffix,
 ):
     """
     This function dynamically builds athena query
@@ -118,7 +120,10 @@ def build_athena_query_for_waf_logs(
         waf_block_period: int. The period (in minutes) to block applicable IP addresses
         request_threshold: int. The maximum acceptable bad requests per minute per IP address
         request_threshold_by_country: The maximum acceptable bad requests per minute per Country
+        group_by: string. The group by columns (country, uri or both) selected by user
         athena_query_run_schedule: The Athena query run schedule (in minutes) set in EventBridge events rule
+        exclude_uri_prefix: string. The URI prefix to exclude from the query
+        exclude_uri_suffix: string. The URI suffix to exclude from the query
 
     Returns:
         Athena query string
@@ -168,6 +173,8 @@ def build_athena_query_for_waf_logs(
         athena_query_run_schedule,
         additional_columns_group_two,
         start_timestamp,
+        exclude_uri_prefix,
+        exclude_uri_suffix,
     )
 
     log.info(
@@ -440,7 +447,9 @@ def build_athena_query_part_two_for_partition(log, start_timestamp, end_timestam
 
 
 def build_athena_query_part_three_for_app_access_logs(
-    log, error_threshold, start_timestamp
+    log,
+    error_threshold,
+    start_timestamp,
 ):
     """
     This function dynamically builds the third part
@@ -544,6 +553,29 @@ def build_having_clause_for_waf_logs(
     return having_clause_string
 
 
+def build_exclude_uri_clause_for_waf_logs(log, exclude_uri_prefix, exclude_uri_suffix):
+    exclude_uri_string = ""
+    exclude_uri_clause_list = []
+    if len(exclude_uri_prefix) > 0:
+        prefix_list = exclude_uri_prefix.split(";")
+        for prefix in prefix_list:
+            exclude_uri_clause_list.append("\t\t\turi NOT LIKE '" + prefix + "%'")
+    if len(exclude_uri_suffix) > 0:
+        suffix_list = exclude_uri_suffix.split(";")
+        for suffix in suffix_list:
+            exclude_uri_clause_list.append("\t\t\turi NOT LIKE '%" + suffix + "'")
+
+    if len(exclude_uri_clause_list) > 0:
+        exclude_uri_string = " AND \n".join(exclude_uri_clause_list)
+
+    log.debug(
+        "[build_exclude_uri_clause_for_waf_logs]  \
+         Having clause: %s"
+        % exclude_uri_string
+    )
+    return exclude_uri_string
+
+
 def build_athena_query_part_three_for_waf_logs(
     log,
     default_request_threshold,
@@ -551,6 +583,8 @@ def build_athena_query_part_three_for_waf_logs(
     athena_query_run_schedule,
     additional_columns_group_two,
     start_timestamp,
+    exclude_uri_prefix,
+    exclude_uri_suffix,
 ):
     """
     This function dynamically builds the third part
@@ -566,6 +600,12 @@ def build_athena_query_part_three_for_waf_logs(
     Returns:
         Athena query string
     """
+    exclude_uri_clause = build_exclude_uri_clause_for_waf_logs(
+        log,
+        exclude_uri_prefix,
+        exclude_uri_suffix,
+    )
+
     having_clause = build_having_clause_for_waf_logs(
         log,
         default_request_threshold,
@@ -582,6 +622,7 @@ def build_athena_query_part_three_for_waf_logs(
         "\t\tlogs_with_concat_data\n"
         "\tWHERE\n"
         "\t\tdatetime > TIMESTAMP " + "'" + str(start_timestamp)[0:19] + "'"
+        "\n\t\tAND (\n" + exclude_uri_clause + "\n\t\t)\n"
         "\n\tGROUP BY\n"
         "\t\tclient_ip" + additional_columns_group_two + ",\n"
         "\t\tdate_trunc('minute', datetime)\n"

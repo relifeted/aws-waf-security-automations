@@ -81,6 +81,8 @@ class AthenaLogParser(object):
                 environ["REQUEST_THRESHOLD_BY_COUNTRY"],
                 environ["HTTP_FLOOD_ATHENA_GROUP_BY"],
                 int(environ["ATHENA_QUERY_RUN_SCHEDULE"]),
+                environ["EXCLUDE_URI_PREFIX"],
+                environ["EXCLUDE_URI_SUFFIX"],
             )
 
         response = athena_client.start_query_execution(
