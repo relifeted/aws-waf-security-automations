@@ -13,13 +13,15 @@
 #  governing permissions  and limitations under the License.                 #
 ##############################################################################
 
-import pytest
-import boto3
 from os import environ
+
+import boto3
+import pytest
 from moto import (
     mock_wafv2,
     mock_cloudwatch
 )
+
 
 @pytest.fixture(scope='module', autouse=True)
 def aws_credentials():

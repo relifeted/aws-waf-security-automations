@@ -14,7 +14,9 @@
 
 import datetime
 from os import environ
+
 from lib.boto3_util import create_client
+
 
 class WAFCloudWatchMetrics(object):
     """

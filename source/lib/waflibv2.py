@@ -12,9 +12,10 @@
 ######################################################################################################################
 # import boto3
 # from botocore.config import Config
-from botocore.exceptions import ClientError
 from ipaddress import ip_address
+
 from backoff import on_exception, expo, full_jitter
+from botocore.exceptions import ClientError
 from lib.boto3_util import create_client
 
 API_CALL_NUM_RETRIES = 5

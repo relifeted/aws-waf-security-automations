@@ -11,9 +11,10 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-import time
-import os
 import json
+import os
+import time
+
 from lib.cfn_response import send_response
 from lib.logging_util import set_log_level
 

@@ -11,11 +11,13 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-from os import environ
 from calendar import timegm
 from datetime import datetime, timedelta
+from os import environ
+
 from lib.dynamodb_util import DDB
 from lib.logging_util import set_log_level
+
 
 class SetIPRetention(object):
     """

@@ -15,7 +15,8 @@
 
 from lib.boto3_util import create_resource
 
-dynamodb_resource = create_resource('dynamodb')
+dynamodb_resource = create_resource("dynamodb")
+
 
 class DDB(object):
     def __init__(self, log, table_name):
@@ -26,9 +27,7 @@ class DDB(object):
     # DDB API call to put an item
     def put_item(self, item):
         try:
-            response = self.table.put_item(
-                Item=item
-            )
+            response = self.table.put_item(Item=item)
             return response
         except Exception as e:
             self.log.error(e)

@@ -13,67 +13,160 @@
 
 from custom_resource.custom_resource import lambda_handler
 
-def test_set_cloud_watch_group_retention(configure_cloud_watch_group_retention_event, example_context, cloudwatch_client, successful_response):
-    result = lambda_handler(configure_cloud_watch_group_retention_event,example_context)
+
+def test_set_cloud_watch_group_retention(
+    configure_cloud_watch_group_retention_event,
+    example_context,
+    cloudwatch_client,
+    successful_response,
+):
+    result = lambda_handler(
+        configure_cloud_watch_group_retention_event, example_context
+    )
     expected = successful_response
     assert result == expected
 
-def test_generate_waf_log_parser_conf_create_event(generate_waf_log_parser_conf_create_event, example_context, wafv2_client, s3_bucket, s3_client, successful_response):
+
+def test_generate_waf_log_parser_conf_create_event(
+    generate_waf_log_parser_conf_create_event,
+    example_context,
+    wafv2_client,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(generate_waf_log_parser_conf_create_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_generate_waf_log_parser_conf_create_event(generate_waf_log_parser_conf_update_event, example_context, wafv2_client, s3_bucket, s3_client, successful_response):
+
+def test_generate_waf_log_parser_conf_create_event(
+    generate_waf_log_parser_conf_update_event,
+    example_context,
+    wafv2_client,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(generate_waf_log_parser_conf_update_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_generate_app_log_parser_conf_create_event(generate_app_log_parser_conf_create_event, example_context, wafv2_client, s3_bucket, s3_client, successful_response):
+
+def test_generate_app_log_parser_conf_create_event(
+    generate_app_log_parser_conf_create_event,
+    example_context,
+    wafv2_client,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(generate_app_log_parser_conf_create_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_generate_app_log_parser_conf_update_event(generate_app_log_parser_conf_update_event, example_context, wafv2_client, s3_bucket, s3_client, successful_response):
+
+def test_generate_app_log_parser_conf_update_event(
+    generate_app_log_parser_conf_update_event,
+    example_context,
+    wafv2_client,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(generate_app_log_parser_conf_update_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_aws_waf_logs_create_event(configure_aws_waf_logs_create_event, example_context, wafv2_client, successful_response):
+
+def test_configure_aws_waf_logs_create_event(
+    configure_aws_waf_logs_create_event,
+    example_context,
+    wafv2_client,
+    successful_response,
+):
     result = lambda_handler(configure_aws_waf_logs_create_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_aws_waf_logs_update_event(configure_aws_waf_logs_update_event, example_context, wafv2_client, successful_response):
+
+def test_configure_aws_waf_logs_update_event(
+    configure_aws_waf_logs_update_event,
+    example_context,
+    wafv2_client,
+    successful_response,
+):
     result = lambda_handler(configure_aws_waf_logs_update_event, example_context)
     expected = successful_response
     assert result == expected
-    
-def test_configure_aws_waf_logs_update_event(configure_aws_waf_logs_delete_event, example_context, wafv2_client, successful_response):
+
+
+def test_configure_aws_waf_logs_update_event(
+    configure_aws_waf_logs_delete_event,
+    example_context,
+    wafv2_client,
+    successful_response,
+):
     result = lambda_handler(configure_aws_waf_logs_delete_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_web_acl_delete(configure_web_acl_delete, example_context, successful_response):
+
+def test_configure_web_acl_delete(
+    configure_web_acl_delete, example_context, successful_response
+):
     result = lambda_handler(configure_web_acl_delete, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_waf_log_bucket_create_event(configure_waf_log_bucket_create_event, example_context, s3_bucket, s3_client, successful_response):
+
+def test_configure_waf_log_bucket_create_event(
+    configure_waf_log_bucket_create_event,
+    example_context,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(configure_waf_log_bucket_create_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_waf_log_bucket_delete_event(configure_waf_log_bucket_delete_event, example_context, s3_bucket, s3_client, successful_response):
+
+def test_configure_waf_log_bucket_delete_event(
+    configure_waf_log_bucket_delete_event,
+    example_context,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
     result = lambda_handler(configure_waf_log_bucket_delete_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_configure_app_access_log_bucket_create_event(configure_app_access_log_bucket_create_event, example_context, s3_bucket, s3_client, app_access_log_bucket_create_event_error_response):
-    result = lambda_handler(configure_app_access_log_bucket_create_event, example_context)
+
+def test_configure_app_access_log_bucket_create_event(
+    configure_app_access_log_bucket_create_event,
+    example_context,
+    s3_bucket,
+    s3_client,
+    app_access_log_bucket_create_event_error_response,
+):
+    result = lambda_handler(
+        configure_app_access_log_bucket_create_event, example_context
+    )
     expected = app_access_log_bucket_create_event_error_response
     assert result == expected
 
-def test_configure_app_access_log_bucket_delete_event(configure_app_access_log_bucket_delete_event, example_context, s3_bucket, s3_client, successful_response):
-    result = lambda_handler(configure_app_access_log_bucket_delete_event, example_context)
+
+def test_configure_app_access_log_bucket_delete_event(
+    configure_app_access_log_bucket_delete_event,
+    example_context,
+    s3_bucket,
+    s3_client,
+    successful_response,
+):
+    result = lambda_handler(
+        configure_app_access_log_bucket_delete_event, example_context
+    )
     expected = successful_response
     assert result == expected

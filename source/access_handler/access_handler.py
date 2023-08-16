@@ -12,14 +12,15 @@
 ######################################################################################################################
 
 import os
-from ipaddress import ip_address
 from ipaddress import IPv4Network
 from ipaddress import IPv6Network
+from ipaddress import ip_address
 from os import environ
-from lib.waflibv2 import WAFLIBv2
-from lib.solution_metrics import send_metrics
+
 from lib.cw_metrics_util import WAFCloudWatchMetrics
 from lib.logging_util import set_log_level
+from lib.solution_metrics import send_metrics
+from lib.waflibv2 import WAFLIBv2
 
 waflib = WAFLIBv2()
 CW_METRIC_PERIOD_SECONDS = 12 * 3600    # Twelve hours in seconds

@@ -14,7 +14,9 @@
 ###############################################################################
 
 from os import environ
+
 from partition_s3_logs import lambda_handler
+
 
 def test_partition_s3_cloudfront_log(partition_s3_cloudfront_log_test_event_setup):
     try: 

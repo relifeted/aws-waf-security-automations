@@ -14,20 +14,23 @@
 
 from lib.boto3_util import create_client
 
+
 class SNS(object):
     def __init__(self, log):
         self.log = log
-        self.sns_client = create_client('sns')
+        self.sns_client = create_client("sns")
 
     def publish(self, topic_arn, message, subject):
         try:
             response = self.sns_client.publish(
-                TopicArn=topic_arn,
-                Message=message,
-                Subject=subject
+                TopicArn=topic_arn, Message=message, Subject=subject
             )
             return response
         except Exception as e:
-            self.log.error("[sns_util: publish] failed to send email notification: \nTopic Arn: %s\nMessage: %s", topic_arn, message)
+            self.log.error(
+                "[sns_util: publish] failed to send email notification: \nTopic Arn: %s\nMessage: %s",
+                topic_arn,
+                message,
+            )
             self.log.error(e)
             return None

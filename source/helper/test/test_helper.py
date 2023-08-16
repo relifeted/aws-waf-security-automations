@@ -13,28 +13,36 @@
 
 from helper.helper import lambda_handler
 
-def test_check_requirements(check_requirements_event, example_context, successful_response):
+
+def test_check_requirements(
+    check_requirements_event, example_context, successful_response
+):
     result = lambda_handler(check_requirements_event, example_context)
     expected = successful_response
     assert result == expected
+
 
 def test_create_uuid(create_uuid_event, example_context, successful_response):
     result = lambda_handler(create_uuid_event, example_context)
     expected = successful_response
     assert result == expected
 
-def test_create_delivery_stream_name_event(create_delivery_stream_name_event, example_context, successful_response):
+
+def test_create_delivery_stream_name_event(
+    create_delivery_stream_name_event, example_context, successful_response
+):
     result = lambda_handler(create_delivery_stream_name_event, example_context)
     expected = successful_response
     assert result == expected
+
 
 def test_create_db_name(create_db_name_event, example_context, successful_response):
     result = lambda_handler(create_db_name_event, example_context)
     expected = successful_response
     assert result == expected
 
+
 def test_error(erroneous_check_requirements_event, example_context, error_response):
     result = lambda_handler(erroneous_check_requirements_event, example_context)
     expected = error_response
     assert result == expected
-    

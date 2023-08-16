@@ -14,8 +14,10 @@
 ##############################################################################
 
 import datetime
+
 from lib.boto3_util import create_client
 from lib.logging_util import set_log_level
+
 
 def lambda_handler(event, _):
     """

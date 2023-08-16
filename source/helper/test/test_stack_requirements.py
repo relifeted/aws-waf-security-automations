@@ -11,9 +11,12 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
+import logging
+from uuid import UUID
+
+import boto3
 from helper.stack_requirements import (
-    StackRequirements, 
-    WAF_FOR_CLOUDFRONT_EXCEPTION_MESSAGE,
+    StackRequirements,
     INVALID_FLOOD_THRESHOLD_MESSAGE,
     EMPTY_S3_BUCKET_NAME_EXCEPTION_MESSAGE,
     INCORRECT_REGION_S3_LAMBDA_EXCEPTION_MESSAGE,
@@ -22,11 +25,6 @@ from helper.stack_requirements import (
 from moto import (
     mock_s3
 )
-from uuid import UUID
-from lib.boto3_util import create_client
-import logging
-import boto3
-
 
 log_level = 'DEBUG'
 logging.getLogger().setLevel(log_level)

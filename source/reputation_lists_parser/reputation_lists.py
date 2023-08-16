@@ -10,21 +10,23 @@
 #  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    #
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
-import os
-import requests
 import json
+import os
 import re
-from time import sleep
-from ipaddress import ip_address
-from ipaddress import ip_network
 from ipaddress import IPv4Network
 from ipaddress import IPv6Network
+from ipaddress import ip_address
+from ipaddress import ip_network
 from os import environ
-from lib.solution_metrics import send_metrics
-from lib.waflibv2 import WAFLIBv2
+from time import sleep
+
+import requests
+
 from lib.cfn_response import send_response
 from lib.cw_metrics_util import WAFCloudWatchMetrics
 from lib.logging_util import set_log_level
+from lib.solution_metrics import send_metrics
+from lib.waflibv2 import WAFLIBv2
 
 waflib = WAFLIBv2()
 

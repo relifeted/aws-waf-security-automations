@@ -15,15 +15,19 @@
 import logging
 from os import environ
 
-def set_log_level(default_log_level='ERROR'):
+
+def set_log_level(default_log_level="ERROR"):
     default_log_level = logging.getLevelName(default_log_level.upper())
-    log_level = str(environ['LOG_LEVEL'].upper()) \
-            if 'LOG_LEVEL' in environ else default_log_level
-    
+    log_level = (
+        str(environ["LOG_LEVEL"].upper())
+        if "LOG_LEVEL" in environ
+        else default_log_level
+    )
+
     log = logging.getLogger()
-    
-    if log_level not in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']:
-        log_level = 'ERROR'
+
+    if log_level not in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
+        log_level = "ERROR"
     log.setLevel(log_level)
 
     return log

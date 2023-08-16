@@ -19,10 +19,7 @@ from lib.solution_metrics import send_metrics
 def test_send_solution_metrics():
     uuid = "waf_test_00001"
     solution_id = "waf_test"
-    data = {
-            "test_string1": "waf_test",
-            "test_string2": "test_1"
-           }
+    data = {"test_string1": "waf_test", "test_string2": "test_1"}
     url = "https://testurl.com/generic"
     response = send_metrics(data, uuid, solution_id, url)
     assert response is not None

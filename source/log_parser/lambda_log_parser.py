@@ -11,15 +11,16 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
+import datetime
 import gzip
 import json
-import datetime
 import os
 from os import remove
 from time import sleep
 from urllib.parse import urlparse
-from lib.waflibv2 import WAFLIBv2
+
 from lib.s3_util import S3
+from lib.waflibv2 import WAFLIBv2
 
 TMP_DIR = '/tmp/'
 FORMAT_DATE_TIME = "%Y-%m-%d %H:%M:%S %Z%z"

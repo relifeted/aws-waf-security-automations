@@ -11,15 +11,16 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-from time import sleep
-from os import environ
 from datetime import datetime
+from os import environ
+from time import sleep
+
 from boto3.dynamodb.types import TypeDeserializer
-from lib.waflibv2 import WAFLIBv2
+
+from lib.logging_util import set_log_level
 from lib.sns_util import SNS
 from lib.solution_metrics import send_metrics
-from lib.logging_util import set_log_level
-
+from lib.waflibv2 import WAFLIBv2
 
 waflib = WAFLIBv2()
 

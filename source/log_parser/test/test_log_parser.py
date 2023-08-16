@@ -14,8 +14,8 @@
 ###############################################################################
 
 from os import environ
-from log_parser import log_parser
 
+from log_parser import log_parser
 
 UNDEFINED_HANDLER_MESSAGE = "[lambda_handler] undefined handler for this type of event"
 ATHENA_LOG_PARSER_PROCESSED_MESSAGE = "[lambda_handler] Athena scheduler event processed."

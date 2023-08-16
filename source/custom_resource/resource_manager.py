@@ -12,13 +12,15 @@
 ######################################################################################################################
 
 import json
-import botocore
 import os
 from logging import Logger
-from lib.waflibv2 import WAFLIBv2
+
+import botocore
+
 from lib.boto3_util import create_client
 from lib.s3_util import S3
 from lib.solution_metrics import send_metrics
+from lib.waflibv2 import WAFLIBv2
 
 AWS_LOGS_PATH_PREFIX = 'AWSLogs/'
 S3_OBJECT_CREATED = 's3:ObjectCreated:*'

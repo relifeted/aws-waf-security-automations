@@ -12,9 +12,10 @@
 ######################################################################################################################
 #!/bin/python
 
-import boto3
 import logging
 from os import environ
+
+import boto3
 from botocore.config import Config
 
 log = logging.getLogger()

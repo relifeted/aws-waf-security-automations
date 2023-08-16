@@ -15,8 +15,9 @@
 
 from add_athena_partitions import lambda_handler
 
+
 def test_add_athena_partitions(athena_partitions_test_event_setup):
-    try: 
+    try:
         event = athena_partitions_test_event_setup
         result = False
         lambda_handler(event, {})
@@ -26,8 +27,10 @@ def test_add_athena_partitions(athena_partitions_test_event_setup):
     assert result == True
 
 
-def test_add_athena_partitions(athena_partitions_non_existent_work_group_test_event_setup):
-    try: 
+def test_add_athena_partitions(
+    athena_partitions_non_existent_work_group_test_event_setup,
+):
+    try:
         event = athena_partitions_non_existent_work_group_test_event_setup
         result = False
         lambda_handler(event, {})

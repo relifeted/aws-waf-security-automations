@@ -12,6 +12,7 @@
 ######################################################################################################################
 
 import logging
+
 from resource_manager import ResourceManager
 
 log_level = 'DEBUG'

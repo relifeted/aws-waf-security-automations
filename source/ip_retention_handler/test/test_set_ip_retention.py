@@ -12,8 +12,8 @@
 ######################################################################################################################
 
 from os import environ
-from set_ip_retention import lambda_handler
 
+from set_ip_retention import lambda_handler
 
 SKIP_PROCESS_MESSAGE = "The event for UpdateIPSet API call was made by RemoveExpiredIP lambda instead of user. Skip."
 

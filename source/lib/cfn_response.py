@@ -12,8 +12,10 @@
 ######################################################################################################################
 # !/bin/python
 
-import requests
 import json
+
+import requests
+
 
 def send_response(log, event, context, response_status, response_data, resource_id, reason=None):
     """

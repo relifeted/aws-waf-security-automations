@@ -12,9 +12,11 @@
 ######################################################################################################################
 
 import json
-from stack_requirements import StackRequirements
+
 from lib.cfn_response import send_response
 from lib.logging_util import set_log_level
+from stack_requirements import StackRequirements
+
 
 # ======================================================================================================================
 # Lambda Entry Point

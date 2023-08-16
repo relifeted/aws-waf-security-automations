@@ -13,11 +13,12 @@
 #  and limitations under the License.                                         #
 ###############################################################################
 
-import os
-import requests
-from json import dumps
-from datetime import datetime
 import logging
+import os
+from datetime import datetime
+from json import dumps
+
+import requests
 
 log = logging.getLogger(__name__)
 log.setLevel('INFO')

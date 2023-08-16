@@ -14,8 +14,8 @@
 import logging
 from decimal import Decimal
 from os import environ
-from remove_expired_ip import RemoveExpiredIP, lambda_handler
 
+from remove_expired_ip import RemoveExpiredIP, lambda_handler
 
 REMOVE_IP_LIST = ["x.x.x.x", "y.y.y.y"]
 EXPECTED_NONE_TYPE_ERROR_MESSAGE = "'NoneType' object has no attribute 'get'"

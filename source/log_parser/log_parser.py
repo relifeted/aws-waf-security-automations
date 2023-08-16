@@ -14,12 +14,13 @@
 import os
 from os import environ
 from urllib.parse import unquote_plus
-from lib.waflibv2 import WAFLIBv2
-from lib.solution_metrics import send_metrics
+
+from athena_log_parser import AthenaLogParser
+from lambda_log_parser import LambdaLogParser
 from lib.cw_metrics_util import WAFCloudWatchMetrics
 from lib.logging_util import set_log_level
-from lambda_log_parser import LambdaLogParser
-from athena_log_parser import AthenaLogParser
+from lib.solution_metrics import send_metrics
+from lib.waflibv2 import WAFLIBv2
 
 scope = os.getenv('SCOPE')
 scanners = 1

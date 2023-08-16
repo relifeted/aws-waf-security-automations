@@ -13,8 +13,9 @@
 #  and limitations under the License.                                         #
 ###############################################################################
 
-import pytest
 from os import environ
+
+import pytest
 
 
 @pytest.fixture(scope='module', autouse=True)

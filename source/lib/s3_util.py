@@ -13,7 +13,9 @@
 #!/bin/python
 
 import json
+
 from lib.boto3_util import create_client, create_resource
+
 
 class S3(object):
     def __init__(self, log):

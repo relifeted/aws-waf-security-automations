@@ -12,10 +12,12 @@
 ######################################################################################################################
 
 import json
-from resource_manager import ResourceManager
-from log_group_retention import LogGroupRetention
+
 from lib.cfn_response import send_response
 from lib.logging_util import set_log_level
+from log_group_retention import LogGroupRetention
+from resource_manager import ResourceManager
+
 
 # ======================================================================================================================
 # Lambda Entry Point

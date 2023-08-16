@@ -11,8 +11,9 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-from log_group_retention import LogGroupRetention
 import logging
+
+from log_group_retention import LogGroupRetention
 
 log_level = 'DEBUG'
 logging.getLogger().setLevel(log_level)

@@ -11,11 +11,13 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-import pytest
 import boto3
+import pytest
 from moto import (
     mock_s3
 )
+
+
 class Context:
     def __init__(self, invoked_function_arn, log_group_name, log_stream_name):
        self.invoked_function_arn = invoked_function_arn

@@ -13,6 +13,7 @@
 
 from timer.timer import lambda_handler
 
+
 def test_timer(timer_event, example_context):
     result = lambda_handler(timer_event, example_context)
     expected = '{"StatusCode": "200", "Body": {"message": "success"}}'

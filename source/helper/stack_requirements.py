@@ -11,11 +11,13 @@
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-import botocore
-import string
 import random
 import re
+import string
 import uuid
+
+import botocore
+
 from lib.s3_util import S3
 
 WAF_FOR_CLOUDFRONT_EXCEPTION_MESSAGE = '''

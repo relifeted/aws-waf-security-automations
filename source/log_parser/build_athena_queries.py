@@ -18,8 +18,14 @@ import json
 
 
 def build_athena_query_for_app_access_logs(
-    log, log_type, database_name, table_name, end_timestamp,
-        waf_block_period, error_threshold):
+    log,
+    log_type,
+    database_name,
+    table_name,
+    end_timestamp,
+    waf_block_period,
+    error_threshold,
+):
     """
     This function dynamically builds athena query
     for cloudfront logs by adding partition values:
@@ -38,55 +44,65 @@ def build_athena_query_for_app_access_logs(
     Returns:
         Athena query string
     """
-    log.info(
-        '[build_athena_query_for_app_access_logs] Start')
+    log.info("[build_athena_query_for_app_access_logs] Start")
 
     # ------------------------------------------------
     log.debug(
         "[build_athena_query_for_app_access_logs] \
-            Get start and end time stamps")
+            Get start and end time stamps"
+    )
     # ------------------------------------------------
     query_string = ""
-    start_timestamp = end_timestamp - \
-        datetime.timedelta(seconds=60*waf_block_period)
+    start_timestamp = end_timestamp - datetime.timedelta(seconds=60 * waf_block_period)
     log.info(
         "[build_athena_query_for_app_access_logs]  \
             start time: %s; end time: %s"
-            %(start_timestamp, end_timestamp))
+        % (start_timestamp, end_timestamp)
+    )
 
     # -------------------------------------------------
     log.debug(
         "[build_athena_query_for_app_access_logs]  \
-            Build query")
+            Build query"
+    )
     # --------------------------------------------------
-    if log_type == 'CLOUDFRONT':
+    if log_type == "CLOUDFRONT":
         query_string = build_athena_query_part_one_for_cloudfront_logs(
-            log, database_name, table_name)
+            log, database_name, table_name
+        )
     else:  # ALB logs
         query_string = build_athena_query_part_one_for_alb_logs(
-            log, database_name, table_name)
-    query_string = query_string +  \
-        build_athena_query_part_two_for_partition(
-            log, start_timestamp, end_timestamp)
-    query_string = query_string +  \
-        build_athena_query_part_three_for_app_access_logs(
-            log, error_threshold, start_timestamp)
+            log, database_name, table_name
+        )
+    query_string = query_string + build_athena_query_part_two_for_partition(
+        log, start_timestamp, end_timestamp
+    )
+    query_string = query_string + build_athena_query_part_three_for_app_access_logs(
+        log, error_threshold, start_timestamp
+    )
 
     log.info(
         "[build_athena_query_for_app_access_logs]  \
-            Query string:\n %s"%query_string)
+            Query string:\n %s"
+        % query_string
+    )
 
-    log.info(
-        '[build_athena_query_for_app_access_logs] End')
+    log.info("[build_athena_query_for_app_access_logs] End")
 
     return query_string
 
 
 def build_athena_query_for_waf_logs(
-    log, database_name, table_name, end_timestamp,
-        waf_block_period, request_threshold,
-        request_threshold_by_country,
-        group_by, athena_query_run_schedule):
+    log,
+    database_name,
+    table_name,
+    end_timestamp,
+    waf_block_period,
+    request_threshold,
+    request_threshold_by_country,
+    group_by,
+    athena_query_run_schedule,
+):
     """
     This function dynamically builds athena query
     for cloudfront logs by adding partition values:
@@ -107,55 +123,65 @@ def build_athena_query_for_waf_logs(
     Returns:
         Athena query string
     """
-    log.info(
-        '[build_athena_query_for_waf_logs] Start')
+    log.info("[build_athena_query_for_waf_logs] Start")
 
     # ------------------------------------------------
     log.debug(
         "[build_athena_query_for_waf_logs] \
-            Get start and end time stamps")
+            Get start and end time stamps"
+    )
     # ------------------------------------------------
     query_string = ""
-    start_timestamp = end_timestamp - \
-        datetime.timedelta(seconds=60*waf_block_period)
+    start_timestamp = end_timestamp - datetime.timedelta(seconds=60 * waf_block_period)
     log.info(
         "[build_athena_query_for_waf_logs]  \
             start time: %s; end time: %s"
-            %(start_timestamp, end_timestamp))
+        % (start_timestamp, end_timestamp)
+    )
 
     # -------------------------------------------------
     log.debug(
         "[build_athena_query_for_waf_logs]  \
-            Build query")
+            Build query"
+    )
     # --------------------------------------------------
-    additional_columns_group_one, additional_columns_group_two \
-        = build_select_group_by_columns_for_waf_logs(
-            log, group_by, request_threshold_by_country)
-    query_string = build_athena_query_part_one_for_waf_logs(
-        log, database_name, table_name, 
+    (
         additional_columns_group_one,
-        additional_columns_group_two)
-    query_string = query_string +  \
-        build_athena_query_part_two_for_partition(
-            log, start_timestamp, end_timestamp)
-    query_string = query_string +  \
-        build_athena_query_part_three_for_waf_logs(
-            log, request_threshold, request_threshold_by_country,
-            athena_query_run_schedule, additional_columns_group_two,
-            start_timestamp)
+        additional_columns_group_two,
+    ) = build_select_group_by_columns_for_waf_logs(
+        log, group_by, request_threshold_by_country
+    )
+    query_string = build_athena_query_part_one_for_waf_logs(
+        log,
+        database_name,
+        table_name,
+        additional_columns_group_one,
+        additional_columns_group_two,
+    )
+    query_string = query_string + build_athena_query_part_two_for_partition(
+        log, start_timestamp, end_timestamp
+    )
+    query_string = query_string + build_athena_query_part_three_for_waf_logs(
+        log,
+        request_threshold,
+        request_threshold_by_country,
+        athena_query_run_schedule,
+        additional_columns_group_two,
+        start_timestamp,
+    )
 
     log.info(
         "[build_athena_query_for_waf_logs]  \
-            Query string:\n %s"%query_string)
+            Query string:\n %s"
+        % query_string
+    )
 
-    log.info(
-        '[build_athena_query_for_waf_logs] End')
+    log.info("[build_athena_query_for_waf_logs] End")
 
     return query_string
 
 
-def build_athena_query_part_one_for_cloudfront_logs(
-        log, database_name, table_name):
+def build_athena_query_part_one_for_cloudfront_logs(log, database_name, table_name):
     """
     This function dynamically builds the first part
     of the athena query.
@@ -168,26 +194,27 @@ def build_athena_query_part_one_for_cloudfront_logs(
     Returns:
         Athena query string
     """
-    query_string = "SELECT\n" \
-                        "\tclient_ip,\n" \
-                        "\tMAX_BY(counter, counter) as max_counter_per_min\n"  \
-                   " FROM (\n"  \
-                      "\tWITH logs_with_concat_data AS (\n"  \
-                        "\t\tSELECT\n"  \
-                          "\t\t\trequestip as client_ip,\n"  \
-                          "\t\t\tcast(status as varchar) as status,\n"  \
-                          "\t\t\tparse_datetime( concat( concat( format_datetime(date, 'yyyy-MM-dd'), '-' ), time ), 'yyyy-MM-dd-HH:mm:ss') AS datetime\n"  \
-                        "\t\tFROM\n" \
-                        + "\t\t\t" \
-                        + database_name + "." + table_name
+    query_string = (
+        "SELECT\n"
+        "\tclient_ip,\n"
+        "\tMAX_BY(counter, counter) as max_counter_per_min\n"
+        " FROM (\n"
+        "\tWITH logs_with_concat_data AS (\n"
+        "\t\tSELECT\n"
+        "\t\t\trequestip as client_ip,\n"
+        "\t\t\tcast(status as varchar) as status,\n"
+        "\t\t\tparse_datetime( concat( concat( format_datetime(date, 'yyyy-MM-dd'), '-' ), time ), 'yyyy-MM-dd-HH:mm:ss') AS datetime\n"
+        "\t\tFROM\n" + "\t\t\t" + database_name + "." + table_name
+    )
     log.debug(
         "[build_athena_query_part_one_for_cloudfront_logs]  \
-         Query string part One:\n %s"%query_string)
+         Query string part One:\n %s"
+        % query_string
+    )
     return query_string
 
 
-def build_athena_query_part_one_for_alb_logs(
-        log, database_name, table_name):
+def build_athena_query_part_one_for_alb_logs(log, database_name, table_name):
     """
     This function dynamically builds the first part
     of the athena query.
@@ -200,26 +227,29 @@ def build_athena_query_part_one_for_alb_logs(
     Returns:
         Athena query string
     """
-    query_string = "SELECT\n" \
-                        "\tclient_ip,\n" \
-                        "\tMAX_BY(counter, counter) as max_counter_per_min\n"  \
-                   " FROM (\n"  \
-                      "\tWITH logs_with_concat_data AS (\n"  \
-                        "\t\tSELECT\n"  \
-                          "\t\t\tclient_ip,\n"  \
-                          "\t\t\ttarget_status_code AS status,\n"  \
-                          "\t\t\tparse_datetime(time, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSS''Z') AS datetime\n"  \
-                        "\t\tFROM\n" \
-                        + "\t\t\t" \
-                        + database_name + "." + table_name
+    query_string = (
+        "SELECT\n"
+        "\tclient_ip,\n"
+        "\tMAX_BY(counter, counter) as max_counter_per_min\n"
+        " FROM (\n"
+        "\tWITH logs_with_concat_data AS (\n"
+        "\t\tSELECT\n"
+        "\t\t\tclient_ip,\n"
+        "\t\t\ttarget_status_code AS status,\n"
+        "\t\t\tparse_datetime(time, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSS''Z') AS datetime\n"
+        "\t\tFROM\n" + "\t\t\t" + database_name + "." + table_name
+    )
     log.debug(
         "[build_athena_query_part_one_for_alb_logs]  \
-         Query string part One:\n %s"%query_string)
+         Query string part One:\n %s"
+        % query_string
+    )
     return query_string
 
 
 def build_select_group_by_columns_for_waf_logs(
-        log, group_by, request_threshold_by_country):
+    log, group_by, request_threshold_by_country
+):
     """
     This function dynamically builds user selected additional columns
     in select and group by statement of the athena query.
@@ -231,39 +261,46 @@ def build_select_group_by_columns_for_waf_logs(
     Returns:
         string of columns
     """
-    
-    additional_columns_group_one = ''
-    additional_columns_group_two = ''
 
-    if group_by.lower() == 'country' or \
-        (group_by.lower() == 'none' and len(request_threshold_by_country) > 0) :
-        additional_columns_group_one = 'httprequest.country as country,'
-        additional_columns_group_two = ', country'
-    elif group_by.lower() == 'uri':
+    additional_columns_group_one = ""
+    additional_columns_group_two = ""
+
+    if group_by.lower() == "country" or (
+        group_by.lower() == "none" and len(request_threshold_by_country) > 0
+    ):
+        additional_columns_group_one = "httprequest.country as country,"
+        additional_columns_group_two = ", country"
+    elif group_by.lower() == "uri":
         # Add country if threshold by country is configured
-        additional_columns_group_one =  \
-            'httprequest.uri as uri,'   \
-            if len(request_threshold_by_country) == 0   \
-            else 'httprequest.country as country, httprequest.uri as uri,'
-        additional_columns_group_two =  \
-            ', uri' \
-            if len(request_threshold_by_country) == 0   \
-            else ', country, uri'
-    elif group_by.lower() == 'country and uri':
-        additional_columns_group_one = 'httprequest.country as country, httprequest.uri as uri,'
-        additional_columns_group_two = ', country, uri'
+        additional_columns_group_one = (
+            "httprequest.uri as uri,"
+            if len(request_threshold_by_country) == 0
+            else "httprequest.country as country, httprequest.uri as uri,"
+        )
+        additional_columns_group_two = (
+            ", uri" if len(request_threshold_by_country) == 0 else ", country, uri"
+        )
+    elif group_by.lower() == "country and uri":
+        additional_columns_group_one = (
+            "httprequest.country as country, httprequest.uri as uri,"
+        )
+        additional_columns_group_two = ", country, uri"
 
     log.debug(
         "[build_select_group_by_columns_for_waf_logs]  \
          Additional columns group one: %s\nAdditional columns group two: %s"
-         %(additional_columns_group_one, additional_columns_group_two))
+        % (additional_columns_group_one, additional_columns_group_two)
+    )
     return additional_columns_group_one, additional_columns_group_two
 
 
 def build_athena_query_part_one_for_waf_logs(
-        log, database_name, table_name,
-        additional_columns_group_one,
-        additional_columns_group_two):
+    log,
+    database_name,
+    table_name,
+    additional_columns_group_one,
+    additional_columns_group_two,
+):
     """
     This function dynamically builds the first part
     of the athena query.
@@ -276,25 +313,26 @@ def build_athena_query_part_one_for_waf_logs(
     Returns:
         Athena query string
     """
-    query_string = "SELECT\n" \
-                        "\tclient_ip" + additional_columns_group_two + ",\n" \
-                        "\tMAX_BY(counter, counter) as max_counter_per_min\n"  \
-                   " FROM (\n"  \
-                      "\tWITH logs_with_concat_data AS (\n"  \
-                        "\t\tSELECT\n"  \
-                          "\t\t\thttprequest.clientip as client_ip," + additional_columns_group_one + "\n"  \
-                          "\t\t\tfrom_unixtime(timestamp/1000) as datetime\n"  \
-                        "\t\tFROM\n" \
-                        + "\t\t\t" \
-                        + database_name + "." + table_name
+    query_string = (
+        "SELECT\n"
+        "\tclient_ip" + additional_columns_group_two + ",\n"
+        "\tMAX_BY(counter, counter) as max_counter_per_min\n"
+        " FROM (\n"
+        "\tWITH logs_with_concat_data AS (\n"
+        "\t\tSELECT\n"
+        "\t\t\thttprequest.clientip as client_ip," + additional_columns_group_one + "\n"
+        "\t\t\tfrom_unixtime(timestamp/1000) as datetime\n"
+        "\t\tFROM\n" + "\t\t\t" + database_name + "." + table_name
+    )
     log.debug(
         "[build_athena_query_part_one_for_waf_logs]  \
-         Query string part One:\n %s"%query_string)
+         Query string part One:\n %s"
+        % query_string
+    )
     return query_string
 
 
-def build_athena_query_part_two_for_partition(
-        log, start_timestamp, end_timestamp):
+def build_athena_query_part_two_for_partition(log, start_timestamp, end_timestamp):
     """
     This function dynamically builds the second part
     of the athena query, where partition values are added.
@@ -319,54 +357,91 @@ def build_athena_query_part_two_for_partition(
     end_hour = end_timestamp.hour
 
     # same day query filter!
-    if (start_timestamp.date() == end_timestamp.date()):
+    if start_timestamp.date() == end_timestamp.date():
         log.debug(
             "[build_athena_query_part_two_for_partition] \
-            Same day query filter")
-        query_string = "\n\t\tWHERE year = " + str(start_year) + "\n"  \
-                       "\t\tAND month = " + str(start_month).zfill(2) + "\n"  \
-                       "\t\tAND day = " + str(start_day).zfill(2) + "\n"  \
-                       "\t\tAND hour between "  \
-                       + str(start_hour).zfill(2) + " and " + str(end_hour).zfill(2)
+            Same day query filter"
+        )
+        query_string = (
+            "\n\t\tWHERE year = " + str(start_year) + "\n"
+            "\t\tAND month = " + str(start_month).zfill(2) + "\n"
+            "\t\tAND day = " + str(start_day).zfill(2) + "\n"
+            "\t\tAND hour between "
+            + str(start_hour).zfill(2)
+            + " and "
+            + str(end_hour).zfill(2)
+        )
     # different days - cross days query filter!
-    elif (start_year == end_year):
+    elif start_year == end_year:
         log.debug(
             "[build_athena_query_part_two_for_partition] \
-             Different days - cross days query filter")
-        if (start_month == end_month):  # year and month are the same, but days are different
-            query_string = "\n\t\tWHERE year = " + str(start_year) + "\n"  \
-                        "\t\tAND month = " + str(start_month).zfill(2) + "\n"  \
-                        "\t\tAND (\n"  \
-                        "\t\t\t(day = " + str(start_day).zfill(2) + " AND hour >= " + str(start_hour).zfill(2) + ")\n"  \
-                        "\t\t\tOR (day = " + str(end_day).zfill(2) + " AND hour <= " + str(end_hour).zfill(2) + ")\n"  \
-                        "\t\t)\n"
+             Different days - cross days query filter"
+        )
+        if (
+            start_month == end_month
+        ):  # year and month are the same, but days are different
+            query_string = (
+                "\n\t\tWHERE year = " + str(start_year) + "\n"
+                "\t\tAND month = " + str(start_month).zfill(2) + "\n"
+                "\t\tAND (\n"
+                "\t\t\t(day = "
+                + str(start_day).zfill(2)
+                + " AND hour >= "
+                + str(start_hour).zfill(2)
+                + ")\n"
+                "\t\t\tOR (day = "
+                + str(end_day).zfill(2)
+                + " AND hour <= "
+                + str(end_hour).zfill(2)
+                + ")\n"
+                "\t\t)\n"
+            )
         else:  # years are the same, but months and days are different
-            query_string = "\n\t\tWHERE year = " + str(start_year) + "\n"  \
-                        "\t\tAND (\n"  \
-                        "\t\t\t(month = " + str(start_month).zfill(2) + " AND day = " + str(start_day).zfill(2) + " AND hour >= " + str(start_hour).zfill(2) + ")\n"  \
-                        "\t\t\tOR (month = " + str(end_month).zfill(2) + " AND day = " + str(end_day).zfill(2) + " AND hour <= " + str(end_hour).zfill(2) + ")\n"  \
-                        "\t\t)\n"
+            query_string = (
+                "\n\t\tWHERE year = " + str(start_year) + "\n"
+                "\t\tAND (\n"
+                "\t\t\t(month = "
+                + str(start_month).zfill(2)
+                + " AND day = "
+                + str(start_day).zfill(2)
+                + " AND hour >= "
+                + str(start_hour).zfill(2)
+                + ")\n"
+                "\t\t\tOR (month = "
+                + str(end_month).zfill(2)
+                + " AND day = "
+                + str(end_day).zfill(2)
+                + " AND hour <= "
+                + str(end_hour).zfill(2)
+                + ")\n"
+                "\t\t)\n"
+            )
     else:  # years are different
         log.debug(
             "[build_athena_query_part_two_for_partition] \
-             Different years - cross years query filter")
-        query_string = "\n\t\tWHERE (year = " + str(start_year) + "\n"  \
-                    "\t\t\tAND month = " + str(start_month).zfill(2) + "\n"  \
-                    "\t\t\tAND day = " + str(start_day).zfill(2) + "\n"  \
-                    "\t\t\tAND hour >= " + str(start_hour).zfill(2) + ")\n"  \
-                    "\t\tOR (year = " + str(end_year) + "\n"  \
-                    "\t\t\tAND month = " + str(end_month).zfill(2) + "\n"  \
-                    "\t\t\tAND day = " + str(end_day).zfill(2) + "\n"  \
-                    "\t\t\tAND hour <= " + str(end_hour).zfill(2) + ")\n"  \
-
+             Different years - cross years query filter"
+        )
+        query_string = (
+            "\n\t\tWHERE (year = " + str(start_year) + "\n"
+            "\t\t\tAND month = " + str(start_month).zfill(2) + "\n"
+            "\t\t\tAND day = " + str(start_day).zfill(2) + "\n"
+            "\t\t\tAND hour >= " + str(start_hour).zfill(2) + ")\n"
+            "\t\tOR (year = " + str(end_year) + "\n"
+            "\t\t\tAND month = " + str(end_month).zfill(2) + "\n"
+            "\t\t\tAND day = " + str(end_day).zfill(2) + "\n"
+            "\t\t\tAND hour <= " + str(end_hour).zfill(2) + ")\n"
+        )
     log.debug(
         "[build_athena_query_part_two_for_partition]  \
-         Query string part Two:\n %s"%query_string)
+         Query string part Two:\n %s"
+        % query_string
+    )
     return query_string
 
 
 def build_athena_query_part_three_for_app_access_logs(
-        log, error_threshold, start_timestamp):
+    log, error_threshold, start_timestamp
+):
     """
     This function dynamically builds the third part
     of the athena query.
@@ -379,37 +454,40 @@ def build_athena_query_part_three_for_app_access_logs(
     Returns:
         Athena query string
     """
-    query_string = "\n\t)\n"  \
-                   "\tSELECT\n"  \
-                   "\t\tclient_ip,\n"  \
-                   "\t\tCOUNT(*) as counter\n"  \
-                   "\tFROM\n"  \
-                   "\t\tlogs_with_concat_data\n"  \
-                   "\tWHERE\n"  \
-                   "\t\tdatetime > TIMESTAMP "  \
-                   + "'" + str(start_timestamp)[0:19] + "'"\
-                   "\n\t\tAND status = ANY (VALUES '400', '401', '403', '404', '405')\n"  \
-                   "\tGROUP BY\n"  \
-                   "\t\tclient_ip,\n"  \
-                   "\t\tdate_trunc('minute', datetime)\n"  \
-                   "\tHAVING\n"  \
-                   "\t\tCOUNT(*) >= "  \
-                   + str(error_threshold) + \
-                   "\n) GROUP BY\n"  \
-                   "\tclient_ip\n"  \
-                   "ORDER BY\n" \
-                   "\tmax_counter_per_min DESC\n" \
-                   "LIMIT 10000;"
+    query_string = (
+        "\n\t)\n"
+        "\tSELECT\n"
+        "\t\tclient_ip,\n"
+        "\t\tCOUNT(*) as counter\n"
+        "\tFROM\n"
+        "\t\tlogs_with_concat_data\n"
+        "\tWHERE\n"
+        "\t\tdatetime > TIMESTAMP " + "'" + str(start_timestamp)[0:19] + "'"
+        "\n\t\tAND status = ANY (VALUES '400', '401', '403', '404', '405')\n"
+        "\tGROUP BY\n"
+        "\t\tclient_ip,\n"
+        "\t\tdate_trunc('minute', datetime)\n"
+        "\tHAVING\n"
+        "\t\tCOUNT(*) >= " + str(error_threshold) + "\n) GROUP BY\n"
+        "\tclient_ip\n"
+        "ORDER BY\n"
+        "\tmax_counter_per_min DESC\n"
+        "LIMIT 10000;"
+    )
     log.debug(
         "[build_athena_query_part_three_for_app_access_logs]  \
-        Query string part Three:\n %s"%query_string)
+        Query string part Three:\n %s"
+        % query_string
+    )
     return query_string
 
 
 def build_having_clause_for_waf_logs(
-        log, default_request_threshold,
-        request_threshold_by_country,
-        athena_query_run_schedule):
+    log,
+    default_request_threshold,
+    request_threshold_by_country,
+    athena_query_run_schedule,
+):
     """
     This function dynamically builds having clause of the athena query.
 
@@ -424,34 +502,56 @@ def build_having_clause_for_waf_logs(
 
     having_clause_string = "\t\tCOUNT(*) >= " + str(request_threshold_calculated)
 
-    if len(request_threshold_by_country) > 0 :
-        having_clause_string = ''
-        not_in_country_string = ''
+    if len(request_threshold_by_country) > 0:
+        having_clause_string = ""
+        not_in_country_string = ""
 
         request_threshold_by_country_json = json.loads(request_threshold_by_country)
         for country in request_threshold_by_country_json:
             request_threshold_for_country = request_threshold_by_country_json[country]
-            request_threshold_for_country_calculated = request_threshold_for_country / athena_query_run_schedule
-            request_threshold_for_country_string = "\t\t(COUNT(*) >= " + str(request_threshold_for_country_calculated) + " AND country = '" +  country + "') OR \n"
+            request_threshold_for_country_calculated = (
+                request_threshold_for_country / athena_query_run_schedule
+            )
+            request_threshold_for_country_string = (
+                "\t\t(COUNT(*) >= "
+                + str(request_threshold_for_country_calculated)
+                + " AND country = '"
+                + country
+                + "') OR \n"
+            )
             having_clause_string += request_threshold_for_country_string
             not_in_country_string += "'" + country + "',"
 
         # Remove last comma and add closing parentheses
         not_in_country_string = not_in_country_string[:-1] + "))"
-        not_in_country_prefix = "\t\t(COUNT(*) >= " + str(request_threshold_calculated) + " AND country NOT IN ("
-        request_threshold_for_others_string = not_in_country_prefix + not_in_country_string
-        having_clause_string = having_clause_string + request_threshold_for_others_string
+        not_in_country_prefix = (
+            "\t\t(COUNT(*) >= "
+            + str(request_threshold_calculated)
+            + " AND country NOT IN ("
+        )
+        request_threshold_for_others_string = (
+            not_in_country_prefix + not_in_country_string
+        )
+        having_clause_string = (
+            having_clause_string + request_threshold_for_others_string
+        )
 
     log.debug(
         "[build_select_group_by_columns_for_waf_logs]  \
-         Having clause: %s"%having_clause_string)
+         Having clause: %s"
+        % having_clause_string
+    )
     return having_clause_string
 
 
 def build_athena_query_part_three_for_waf_logs(
-        log, default_request_threshold, request_threshold_by_country,
-        athena_query_run_schedule, additional_columns_group_two,
-        start_timestamp):
+    log,
+    default_request_threshold,
+    request_threshold_by_country,
+    athena_query_run_schedule,
+    additional_columns_group_two,
+    start_timestamp,
+):
     """
     This function dynamically builds the third part
     of the athena query.
@@ -467,29 +567,33 @@ def build_athena_query_part_three_for_waf_logs(
         Athena query string
     """
     having_clause = build_having_clause_for_waf_logs(
-                        log, default_request_threshold, request_threshold_by_country,
-                        athena_query_run_schedule)
+        log,
+        default_request_threshold,
+        request_threshold_by_country,
+        athena_query_run_schedule,
+    )
 
-    query_string = "\n\t)\n"  \
-                   "\tSELECT\n"  \
-                   "\t\tclient_ip" + additional_columns_group_two + ",\n"  \
-                   "\t\tCOUNT(*) as counter\n"  \
-                   "\tFROM\n"  \
-                   "\t\tlogs_with_concat_data\n"  \
-                   "\tWHERE\n"  \
-                   "\t\tdatetime > TIMESTAMP "  \
-                   + "'" + str(start_timestamp)[0:19] + "'"\
-                   "\n\tGROUP BY\n"  \
-                   "\t\tclient_ip" + additional_columns_group_two + ",\n"  \
-                   "\t\tdate_trunc('minute', datetime)\n"  \
-                   "\tHAVING\n"  \
-                   + having_clause + \
-                   "\n) GROUP BY\n"  \
-                   "\tclient_ip" + additional_columns_group_two + "\n"  \
-                   "ORDER BY\n" \
-                   "\tmax_counter_per_min DESC\n" \
-                   "LIMIT 10000;"
+    query_string = (
+        "\n\t)\n"
+        "\tSELECT\n"
+        "\t\tclient_ip" + additional_columns_group_two + ",\n"
+        "\t\tCOUNT(*) as counter\n"
+        "\tFROM\n"
+        "\t\tlogs_with_concat_data\n"
+        "\tWHERE\n"
+        "\t\tdatetime > TIMESTAMP " + "'" + str(start_timestamp)[0:19] + "'"
+        "\n\tGROUP BY\n"
+        "\t\tclient_ip" + additional_columns_group_two + ",\n"
+        "\t\tdate_trunc('minute', datetime)\n"
+        "\tHAVING\n" + having_clause + "\n) GROUP BY\n"
+        "\tclient_ip" + additional_columns_group_two + "\n"
+        "ORDER BY\n"
+        "\tmax_counter_per_min DESC\n"
+        "LIMIT 10000;"
+    )
     log.debug(
         "[build_athena_query_part_three_for_waf_logs]  \
-        Query string part Three:\n %s"%query_string)
+        Query string part Three:\n %s"
+        % query_string
+    )
     return query_string
