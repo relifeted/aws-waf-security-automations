@@ -566,7 +566,7 @@ def build_exclude_uri_clause_for_waf_logs(log, exclude_uri_prefix, exclude_uri_s
             exclude_uri_clause_list.append("\t\t\turi NOT LIKE '%" + suffix + "'")
 
     if len(exclude_uri_clause_list) > 0:
-        exclude_uri_string = " AND \n".join(exclude_uri_clause_list)
+        exclude_uri_string = "\n\t\tAND (\n" + " AND \n".join(exclude_uri_clause_list) + "\n\t\t)\n"
 
     log.debug(
         "[build_exclude_uri_clause_for_waf_logs]  \
@@ -622,7 +622,7 @@ def build_athena_query_part_three_for_waf_logs(
         "\t\tlogs_with_concat_data\n"
         "\tWHERE\n"
         "\t\tdatetime > TIMESTAMP " + "'" + str(start_timestamp)[0:19] + "'"
-        "\n\t\tAND (\n" + exclude_uri_clause + "\n\t\t)\n"
+        f"{exclude_uri_clause}"
         "\n\tGROUP BY\n"
         "\t\tclient_ip" + additional_columns_group_two + ",\n"
         "\t\tdate_trunc('minute', datetime)\n"
